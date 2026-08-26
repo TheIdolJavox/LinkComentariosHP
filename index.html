@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tu opinión | Hospital de Padua</title>
+    <link rel="stylesheet" href="custom.css">
+</head>
+<body class="qr-page">
+    <main class="qr-panel">
+        <h1>Nos sería de mucha ayuda tu opinión</h1>
+        <div class="qr-frame" aria-label="Código QR que dirige a Google">
+            <div id="qrcode"></div>
+        </div>
+        <div class="qr-actions">
+            <button class="qr-download" id="download-qr" type="button" aria-label="Descargar código QR">
+                <span aria-hidden="true">↓</span>
+                Descargar QR
+            </button>
+            <button class="qr-print" id="print-qr" type="button" aria-label="Imprimir carátula">
+                <span aria-hidden="true">⎙</span>
+                Imprimir carátula
+            </button>
+            <button class="qr-cover-download" id="download-cover" type="button" aria-label="Descargar carátula">
+                <span aria-hidden="true">▣</span>
+                Descargar carátula
+            </button>
+        </div>
+        <p class="qr-thanks">Gracias por tu preferencia</p>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+        const qrTarget = 'https://g.page/r/CSuZ1IpxfkYPEBM/review';
+        const qrElement = document.getElementById('qrcode');
+
+        new QRCode(qrElement, {
+            text: qrTarget,
+            width: 240,
+            height: 240,
+            colorDark: '#252525',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.H
+        });
+
+        document.getElementById('download-qr').addEventListener('click', () => {
+            const canvas = qrElement.querySelector('canvas');
+            const image = qrElement.querySelector('img');
+            const link = document.createElement('a');
+            link.download = 'codigo-qr-google.png';
+            link.href = canvas ? canvas.toDataURL('image/png') : image.src;
+            link.click();
+        });
+
+        document.getElementById('print-qr').addEventListener('click', () => window.print());
+
+        document.getElementById('download-cover').addEventListener('click', () => {
+            const qrCanvas = qrElement.querySelector('canvas');
+            const coverCanvas = document.createElement('canvas');
+            const context = coverCanvas.getContext('2d');
+            const coverWidth = 900;
+            const coverHeight = 1100;
+            const center = coverWidth / 2;
+
+            coverCanvas.width = coverWidth;
+            coverCanvas.height = coverHeight;
+            context.fillStyle = '#ffffff';
+            context.fillRect(0, 0, coverWidth, coverHeight);
+            context.fillStyle = '#b11e29';
+            context.fillRect(0, 0, coverWidth, 14);
+            context.fillStyle = '#252525';
+            context.textAlign = 'center';
+            context.font = 'bold 55px Georgia';
+            context.fillText('No sería de mucha', center, 135);
+            context.fillText('ayuda tu opinión', center, 205);
+
+            const qrSize = 540;
+            const qrPosition = (coverWidth - qrSize) / 2;
+            context.strokeStyle = '#e6e1d8';
+            context.strokeRect(qrPosition - 20, 270, qrSize + 40, qrSize + 40);
+            context.drawImage(qrCanvas, qrPosition, 290, qrSize, qrSize);
+
+            context.strokeStyle = '#e6e1d8';
+            context.beginPath();
+            context.moveTo(120, 900);
+            context.lineTo(780, 900);
+            context.stroke();
+            context.fillStyle = '#016836';
+            context.font = 'bold 42px Georgia';
+            context.fillText('Gracias por tu preferencia', center, 980);
+
+            const link = document.createElement('a');
+            link.download = 'caratula-codigo-qr.png';
+            link.href = coverCanvas.toDataURL('image/png');
+            link.click();
+        });
+    </script>
+</body>
+</html>
