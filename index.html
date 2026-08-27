@@ -43,6 +43,36 @@
             correctLevel: QRCode.CorrectLevel.H
         });
 
+        const decorateQr = () => {
+            const canvas = qrElement.querySelector('canvas');
+            if (!canvas) return;
+
+            const context = canvas.getContext('2d');
+            const logo = new Image();
+            const logoSize = 42;
+            const backgroundSize = 58;
+            const center = canvas.width / 2;
+
+            logo.onload = () => {
+                context.fillStyle = '#ffffff';
+                context.beginPath();
+                context.arc(center, center, backgroundSize / 2, 0, Math.PI * 2);
+                context.fill();
+                context.drawImage(
+                    logo,
+                    center - logoSize / 2,
+                    center - logoSize / 2,
+                    logoSize,
+                    logoSize
+                );
+                const image = qrElement.querySelector('img');
+                if (image) image.src = canvas.toDataURL('image/png');
+            };
+            logo.src = 'assets/img/logo-hp.png';
+        };
+
+        decorateQr();
+
         document.getElementById('download-qr').addEventListener('click', () => {
             const canvas = qrElement.querySelector('canvas');
             const image = qrElement.querySelector('img');
@@ -71,7 +101,7 @@
             context.fillStyle = '#252525';
             context.textAlign = 'center';
             context.font = 'bold 55px Georgia';
-            context.fillText('No sería de mucha', center, 135);
+            context.fillText('Nos sería de mucha', center, 135);
             context.fillText('ayuda tu opinión', center, 205);
 
             const qrSize = 540;
